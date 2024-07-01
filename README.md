@@ -17,3 +17,7 @@ This is a transaction management application. The application  allow users to im
 
 ## Usage
 To start the project run ``` npm run start``` from the root folder
+
+*Test user*
+email: test@gmail.com
+password: 123456
