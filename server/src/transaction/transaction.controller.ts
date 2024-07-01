@@ -9,7 +9,6 @@ import {
   Query,
   Param,
   Body,
-  ParseUUIDPipe,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -43,18 +42,19 @@ export class TransactionController {
   @UseGuards(AuthGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createDto: CreateDto) {
-    await this.transactionService.createTransactions(createDto);
+  async create(
+    @Body() createDto: CreateDto[],
+    @Req() request: RequestWithUser,
+  ) {
+    const userId = request.user.id;
+    await this.transactionService.createTransactions(createDto, userId);
     return { message: 'transaction created successfully' };
   }
 
   @UseGuards(AuthGuard)
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
-  async update(
-    @Param('id', ParseUUIDPipe) id: number,
-    @Body() updateDto: Partial<CreateDto>,
-  ) {
+  async update(@Param('id') id: number, @Body() updateDto: Partial<CreateDto>) {
     await this.transactionService.updateTransaction(id, updateDto);
     return { message: 'transaction updated successfully' };
   }
@@ -62,7 +62,7 @@ export class TransactionController {
   @UseGuards(AuthGuard)
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  async delete(@Param('id', ParseUUIDPipe) id: number) {
+  async delete(@Param('id') id: number) {
     await this.transactionService.deleteTransaction(id);
     return { message: 'transaction deleted successfully' };
   }

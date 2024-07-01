@@ -1,7 +1,8 @@
 import axios from 'axios';
-
+const server = 'http://localhost:3000/api/';
+console.log(server);
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: server,
   withCredentials: true,
 });
 

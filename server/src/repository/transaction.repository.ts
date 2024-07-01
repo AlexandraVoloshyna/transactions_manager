@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { CreateDto } from 'src/transaction/dto/create.dto';
 import { GetAllDto } from 'src/transaction/dto/get-all.dto';
 import { TransactionEntity } from 'src/transaction/transaction.entity';
 import { Brackets, DataSource, Repository } from 'typeorm';
@@ -16,11 +17,16 @@ export class TransactionRepository extends Repository<TransactionEntity> {
     if (search) {
       queryBuilder.andWhere(
         new Brackets(qb => {
-          qb.where('transaction.client_name LIKE :search', {
+          qb.where('transactions.client_name LIKE :search', {
             search: `%${search}%`,
           })
-            .orWhere('transaction.type LIKE :search', { search: `%${search}%` })
-            .orWhere('transaction.status LIKE :search', {
+            .orWhere('transactions.type LIKE :search', {
+              search: `%${search}%`,
+            })
+            .orWhere('transactions.status LIKE :search', {
+              search: `%${search}%`,
+            })
+            .orWhere('transactions.amount LIKE :search', {
               search: `%${search}%`,
             });
         }),
@@ -45,8 +51,26 @@ export class TransactionRepository extends Repository<TransactionEntity> {
       .take(limit);
 
     const [transactions, totalCount] = await queryBuilder.getManyAndCount();
-    const totalPages = totalCount / limit;
+    const totalPages = Math.ceil(totalCount / limit);
 
     return { totalPages, transactions };
+  }
+
+  public async createMany(dto: CreateDto[], userId: number) {
+    const queryBuilder = this.createQueryBuilder('transactions');
+    const transactionEntities = dto.map(data => {
+      const transaction = new TransactionEntity();
+      transaction.client_name = data.client_name;
+      transaction.status = data.status;
+      transaction.type = data.type;
+      transaction.amount = data.amount;
+      transaction.owner = userId;
+      return transaction;
+    });
+    queryBuilder
+      .insert()
+      .into(TransactionEntity)
+      .values(transactionEntities)
+      .execute();
   }
 }

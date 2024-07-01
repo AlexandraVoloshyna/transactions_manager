@@ -3,9 +3,9 @@ import { queryClient } from './queryClient';
 import { transactionService } from '@/services';
 import { queryKeys } from '@/const';
 
-export const useDeleteTransactionMutation = (id: number) =>
+export const useDeleteTransactionMutation = () =>
   useMutation({
-    mutationFn: () => transactionService.delete(id),
+    mutationFn: (id: number) => transactionService.delete(id),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: [queryKeys.transactionKey] }),
   });

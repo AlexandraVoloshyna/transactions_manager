@@ -14,8 +14,8 @@ export class TransactionEntity extends BaseEntity {
   status: string;
 
   @Column()
-  amount: number;
+  amount: string;
 
   @ManyToOne(() => UserEntity, entity => entity.products)
-  owner?: UserEntity;
+  owner: number;
 }

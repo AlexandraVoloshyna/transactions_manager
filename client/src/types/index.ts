@@ -14,7 +14,11 @@ export interface Transaction {
   client_name: string;
   status: EStatus;
   type: EType;
-  amount: number;
+  amount: string;
+}
+export interface TransactionWithPagination {
+  transactions: Transaction[];
+  totalPages: number;
 }
 export type TransactionWithoutId = Omit<Transaction, 'id'>;
 

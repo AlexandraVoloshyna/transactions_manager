@@ -4,9 +4,10 @@ import { transactionService } from '@/services';
 import { queryKeys } from '@/const';
 import { TransactionWithoutId } from '@/types';
 
-export const useCreateTransactionMutation = (data: TransactionWithoutId) =>
+export const useCreateTransactionMutation = () =>
   useMutation({
-    mutationFn: () => transactionService.create(data),
+    mutationFn: (data: TransactionWithoutId[]) =>
+      transactionService.create(data),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: [queryKeys.transactionKey] }),
   });

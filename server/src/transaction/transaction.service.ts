@@ -11,13 +11,21 @@ export class TransactionService {
     return await this.transactionRepository.getAllTransactions(dto, userId);
   }
 
-  public async createTransactions(dto: CreateDto) {
-    const transactions = this.transactionRepository.create(dto);
-    await this.transactionRepository.save(transactions);
+  public async createTransactions(dto: CreateDto[], userId: number) {
+    await this.transactionRepository.createMany(dto, userId);
   }
 
   public async updateTransaction(id: number, dto: Partial<CreateDto>) {
-    await this.transactionRepository.update(id, dto);
+    const transaction = await this.transactionRepository.findOne({
+      where: { id },
+    });
+    const updatedTransaction = {
+      client_name: dto.client_name || transaction.client_name,
+      status: dto.status || transaction.status,
+      type: dto.type || transaction.type,
+      amount: dto.amount || transaction.amount,
+    };
+    await this.transactionRepository.update(id, updatedTransaction);
   }
 
   public async deleteTransaction(id: number) {

@@ -2,15 +2,29 @@ import { apiTransaction } from '@/const';
 import axios from './config';
 import {
   IResponse,
-  Transaction,
+  TransactionWithPagination,
   TransactionWithoutId,
   UpdateTransaction,
 } from '@/types';
 
 class TransactionService {
-  async getAll(query: string): Promise<IResponse<Transaction[]> | undefined> {
+  async getAll(
+    page: number,
+    limit: number,
+    status: string,
+    search: string,
+    type: string,
+  ): Promise<IResponse<TransactionWithPagination> | undefined> {
     try {
-      const response = await axios.get(`${apiTransaction}${query}`);
+      const response = await axios.get(`${apiTransaction.transaction}`, {
+        params: {
+          page,
+          limit,
+          search,
+          status,
+          type,
+        },
+      });
       return response.data;
     } catch (error) {
       if (error instanceof Error) {
@@ -20,7 +34,7 @@ class TransactionService {
   }
 
   async create(
-    data: TransactionWithoutId,
+    data: TransactionWithoutId[],
   ): Promise<IResponse<void> | undefined> {
     try {
       const response = await axios.post(apiTransaction.transaction, data);
