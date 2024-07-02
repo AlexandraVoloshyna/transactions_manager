@@ -90,7 +90,6 @@ export const HomePage = () => {
         complete: results => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const parsedData = results.data.map((transaction: any) => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             return {
               client_name: transaction.ClientName,
               type: transaction.Type,
@@ -98,7 +97,6 @@ export const HomePage = () => {
               amount: transaction.Amount,
             };
           });
-          console.log(parsedData);
           create(parsedData);
         },
       });
