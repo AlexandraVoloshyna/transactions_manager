@@ -54,9 +54,7 @@ export const HomePage = () => {
         Amount: transaction.amount,
       }));
 
-      const csv = Papa.unparse(csvData, {
-        delimiter: "     "
-      });
+      const csv = Papa.unparse(csvData);
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
